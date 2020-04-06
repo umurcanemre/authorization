@@ -1,12 +1,14 @@
-package entity;
+package com.umurcanemre.services.authorization.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import lombok.Data;
+
+@Data
 @Entity
 public class ValidationCode {
 
@@ -15,6 +17,4 @@ public class ValidationCode {
 	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String code;
 	
-	@OneToOne
-	private User user;
 }

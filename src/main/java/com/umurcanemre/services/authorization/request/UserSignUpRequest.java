@@ -3,7 +3,7 @@ package com.umurcanemre.services.authorization.request;
 import lombok.Data;
 
 @Data
-public class SignUpRequest {
+public class UserSignUpRequest {
 	private String name;
 	private String lastname;
 	private String email;
