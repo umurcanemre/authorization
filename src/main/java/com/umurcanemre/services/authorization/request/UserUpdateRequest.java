@@ -3,6 +3,7 @@ package com.umurcanemre.services.authorization.request;
 import lombok.Data;
 
 @Data
-public class UserDeleteRequest {
+public class UserUpdateRequest {
+	private UserPersonalInfo personalInfo;
 	private String id;
 }

@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.umurcanemre.services.authorization.entity.User;
+import com.umurcanemre.services.authorization.request.UserPasswordResetRequest;
 import com.umurcanemre.services.authorization.request.UserSignUpRequest;
-import com.umurcanemre.services.authorization.request.ValidationRequest;
+import com.umurcanemre.services.authorization.request.UserUpdateRequest;
 import com.umurcanemre.services.authorization.service.UserCommandService;
 import com.umurcanemre.services.authorization.service.UserQueryService;
 
@@ -19,7 +20,7 @@ import lombok.Data;
 
 //TODO: 
 // persist userstatus
-// purge validationCode entity
+// create Mail service
 // valid annotation
 
 
@@ -38,7 +39,7 @@ public class UserController {
 	}
 	
 	@PutMapping("/update")
-	public void updateUser(@RequestBody UserSignUpRequest request) {
+	public void updateUser(@RequestBody UserUpdateRequest request) {
 		commandService.updateUser(request);
 	}
 	
@@ -47,8 +48,13 @@ public class UserController {
 		return queryService.getUser(id);
 	}
 
-	@PostMapping("/validate")
-	public void validate(@RequestBody ValidationRequest request) {
-		commandService.validateUser(request);
+	@PostMapping("/validate/{email}/{validationcode}")
+	public void validate(@PathVariable String email, @PathVariable String validationcode) {
+		commandService.validateUser(email,validationcode);
+	}
+	
+	@PostMapping("/passwordreset")
+	public void resetPassword(@RequestBody UserPasswordResetRequest request) {
+		commandService.resetPassword(request);
 	}
 }
