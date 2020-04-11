@@ -9,5 +9,7 @@ import com.umurcanemre.services.authorization.entity.User;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, String> {
-	Optional<User> findByEmailAndValidationCode(String email, String validationCode);
+	Optional<User> findByIdAndValidationCode(String email, String validationCode);
+	Optional<User> findByEmail(String email);
+	Optional<User> findByEmailAndPwResetCode(String email, String pwResetCode);
 }

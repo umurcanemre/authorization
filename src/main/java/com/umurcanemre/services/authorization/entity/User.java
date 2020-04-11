@@ -1,5 +1,6 @@
 package com.umurcanemre.services.authorization.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -23,7 +24,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-public class User {
+public class User implements Serializable {
+	private static final long serialVersionUID = 1131346119576712828L;
+	
 	@Id
 	@Column(nullable = false)
 	@GeneratedValue(generator="system-uuid")
@@ -50,6 +53,13 @@ public class User {
 	@Column(nullable = true)
 	private String validationCode;
 	
+	@Column(nullable = true)
+	private LocalDateTime pwResetCodeTimestamp;
+	@Column(nullable = true)
+	private String pwResetCode;
+	
+	
+	
 	public User(UserSignUpRequest request,String password) {
 		this.update(request.getPersonalInfo());
 		this.password = password;
@@ -67,5 +77,10 @@ public class User {
 		this.status = UserStatus.ACTIVE;
 		this.validationTimestamp = LocalDateTime.now();
 		this.validationCode = null;
+	}
+	
+	public void createPWResetCode() {
+		pwResetCodeTimestamp = LocalDateTime.now();
+		pwResetCode = UUID.randomUUID().toString();
 	}
 }
