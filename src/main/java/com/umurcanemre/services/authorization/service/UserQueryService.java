@@ -1,8 +1,12 @@
 package com.umurcanemre.services.authorization.service;
 
-import com.umurcanemre.services.authorization.entity.User;
+import java.time.LocalDate;
+
+import com.umurcanemre.services.authorization.response.UserResponse;
 
 public interface UserQueryService {
-	User getUser(String id);
-	Iterable<User> getUsers(Iterable<String> idCollection);
+	UserResponse getUser(String id);
+	Double getAverageValidationDuration();
+	Integer getNewUserCountWithinDates(LocalDate startdate, LocalDate endDate);
+	Integer getActiveSessionsCount();
 }

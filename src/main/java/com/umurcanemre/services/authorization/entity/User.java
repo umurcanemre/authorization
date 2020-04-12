@@ -2,6 +2,7 @@ package com.umurcanemre.services.authorization.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -47,9 +48,11 @@ public class User implements Serializable {
 	
 	@UpdateTimestamp
 	private LocalDateTime updateTimestamp;
-	
+
 	@Column(nullable = true)
 	private LocalDateTime validationTimestamp;
+	@Column(nullable = true)
+	private int validationDurationInMins;
 	@Column(nullable = true)
 	private String validationCode;
 	
@@ -57,7 +60,10 @@ public class User implements Serializable {
 	private LocalDateTime pwResetCodeTimestamp;
 	@Column(nullable = true)
 	private String pwResetCode;
-	
+
+	private boolean sessionLive;
+	@Column(nullable = true)
+	private LocalDateTime lastLoginTimestamp;
 	
 	
 	public User(UserSignUpRequest request,String password) {
@@ -77,10 +83,20 @@ public class User implements Serializable {
 		this.status = UserStatus.ACTIVE;
 		this.validationTimestamp = LocalDateTime.now();
 		this.validationCode = null;
+		this.validationDurationInMins = (int)this.joinTimestamp.until(validationTimestamp, ChronoUnit.MINUTES);
 	}
 	
 	public void createPWResetCode() {
 		pwResetCodeTimestamp = LocalDateTime.now();
 		pwResetCode = UUID.randomUUID().toString();
+	}
+	
+	public void login() {
+		this.sessionLive = true;
+		this.lastLoginTimestamp = LocalDateTime.now();
+	}
+	
+	public void logout() {
+		this.sessionLive = false;
 	}
 }

@@ -1,10 +1,17 @@
 package com.umurcanemre.services.authorization.serviceimpl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import com.umurcanemre.services.authorization.entity.User;
+import com.umurcanemre.services.authorization.entity.UserStatus;
+import com.umurcanemre.services.authorization.exception.UserNotFoundException;
 import com.umurcanemre.services.authorization.repository.UserRepository;
+import com.umurcanemre.services.authorization.response.UserResponse;
 import com.umurcanemre.services.authorization.service.UserQueryService;
 
 import lombok.Data;
@@ -14,16 +21,30 @@ import lombok.Data;
 public class UserQueryServiceImpl implements UserQueryService {
 	@Autowired
 	private UserRepository repository;
+	@Autowired
+	private Environment env;
 	
 	
 	@Override
-	public User getUser(String id) {
-		return repository.findById(id).orElse(null) ;
+	public UserResponse getUser(String id) {
+		return new UserResponse(repository.findById(id).orElseThrow(()-> new UserNotFoundException(true, id)));
+	}
+	@Override
+	public Double getAverageValidationDuration() {
+		return repository.getAveregeValidationDuration(UserStatus.ACTIVE.toString());
 	}
 
 	@Override
-	public Iterable<User> getUsers(Iterable<String> idCollection) {
-		return repository.findAllById(idCollection);
+	public Integer getNewUserCountWithinDates(LocalDate startdate, LocalDate endDate) {
+		return repository.findUsersByJoinTimestampBetween(startdate.atStartOfDay(), endDate.plusDays(1).atStartOfDay()).size();
+	}
+
+	@Override
+	public Integer getActiveSessionsCount() {
+		long allowedTime = Long.parseLong(env.getProperty("pwreset.allowedtime.duration"));
+		ChronoUnit cu = ChronoUnit.valueOf(env.getProperty("pwreset.allowedtime.unit"));
+		LocalDateTime loginLimit = LocalDateTime.now().minus(allowedTime, cu);
+		return repository.findUsersBySessionLiveAndLastLoginTimestampGreaterThan(true, loginLimit).size();
 	}
 
 }
