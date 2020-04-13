@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.umurcanemre.services.authorization.entity.User;
+import com.umurcanemre.services.authorization.entity.UserStatus;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, String> {
@@ -21,4 +22,5 @@ public interface UserRepository extends CrudRepository<User, String> {
 
 	Set<User> findUsersByJoinTimestampBetween(LocalDateTime startDate, LocalDateTime endDate);
 	Set<User> findUsersBySessionLiveAndLastLoginTimestampGreaterThan(boolean sessionLive, LocalDateTime startTime);
+	Set<User> findUsersByStatusAndJoinTimestampLessThan(UserStatus status, LocalDateTime timeLimit);
 }

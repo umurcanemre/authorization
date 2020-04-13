@@ -46,5 +46,12 @@ public class UserQueryServiceImpl implements UserQueryService {
 		LocalDateTime loginLimit = LocalDateTime.now().minus(allowedTime, cu);
 		return repository.findUsersBySessionLiveAndLastLoginTimestampGreaterThan(true, loginLimit).size();
 	}
+	@Override
+	public Integer getFailedValidationCount() {
+		long allowedTime = Long.parseLong(env.getProperty("validation.allowedtime.duration"));
+		ChronoUnit cu = ChronoUnit.valueOf(env.getProperty("validation.allowedtime.unit"));
+		LocalDateTime validationTimeLimit = LocalDateTime.now().minus(allowedTime, cu);
+		return repository.findUsersByStatusAndJoinTimestampLessThan(UserStatus.PENDING_VALIDATION, validationTimeLimit).size();
+	}
 
 }

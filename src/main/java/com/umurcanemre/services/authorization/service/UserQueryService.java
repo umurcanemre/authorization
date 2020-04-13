@@ -9,4 +9,5 @@ public interface UserQueryService {
 	Double getAverageValidationDuration();
 	Integer getNewUserCountWithinDates(LocalDate startdate, LocalDate endDate);
 	Integer getActiveSessionsCount();
+	Integer getFailedValidationCount();
 }
