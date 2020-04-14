@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.umurcanemre.services.authorization.exception.OperationAllowedTimeOverException;
-import com.umurcanemre.services.authorization.exception.UserAndPasswordDoNotMatch;
+import com.umurcanemre.services.authorization.exception.UserAndPasswordDoNotMatchException;
 import com.umurcanemre.services.authorization.exception.UserNotFoundException;
 import com.umurcanemre.services.authorization.exception.UserNotLoggedInException;
 import com.umurcanemre.services.authorization.exception.UserStateIncorrectException;
@@ -28,9 +28,9 @@ public class UserAdvice {
 		return ex.getMessage();
 	}
 	@ResponseBody
-	@ExceptionHandler(UserAndPasswordDoNotMatch.class)
+	@ExceptionHandler(UserAndPasswordDoNotMatchException.class)
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
-	String userAndPasswordDoNotMatch(UserAndPasswordDoNotMatch ex) {
+	String userAndPasswordDoNotMatch(UserAndPasswordDoNotMatchException ex) {
 		return ex.getMessage();
 	}
 	@ResponseBody

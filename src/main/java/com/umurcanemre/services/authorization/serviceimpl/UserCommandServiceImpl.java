@@ -15,7 +15,7 @@ import com.umurcanemre.services.authorization.entity.UserStatus;
 import com.umurcanemre.services.authorization.event.NewUserEvent;
 import com.umurcanemre.services.authorization.event.UserPasswordLostEvent;
 import com.umurcanemre.services.authorization.exception.OperationAllowedTimeOverException;
-import com.umurcanemre.services.authorization.exception.UserAndPasswordDoNotMatch;
+import com.umurcanemre.services.authorization.exception.UserAndPasswordDoNotMatchException;
 import com.umurcanemre.services.authorization.exception.UserNotFoundException;
 import com.umurcanemre.services.authorization.exception.UserNotLoggedInException;
 import com.umurcanemre.services.authorization.exception.UserStateIncorrectException;
@@ -92,7 +92,7 @@ public class UserCommandServiceImpl implements UserCommandService, ApplicationEv
 
 		userValidtyAndSessionCheck(user);
 		if (!BCrypt.checkpw(new String(request.getOldPassword()), user.getPassword())) {
-			throw new UserAndPasswordDoNotMatch();
+			throw new UserAndPasswordDoNotMatchException();
 		}
 		user.setPassword(hashPassword(request.getNewPassword(), Integer.parseInt(env.getProperty("bcrypt.iteration"))));
 		repository.save(user);
@@ -147,7 +147,7 @@ public class UserCommandServiceImpl implements UserCommandService, ApplicationEv
 	}
 
 	private void userValidityCheck(User user) {
-		if (user.getStatus().equals(UserStatus.ACTIVE))
+		if (!user.getStatus().equals(UserStatus.ACTIVE))
 			throw new UserStateIncorrectException(UserStatus.ACTIVE);
 	}
 
@@ -161,6 +161,9 @@ public class UserCommandServiceImpl implements UserCommandService, ApplicationEv
 		User user = repository.findByEmail(request.getEmail())
 				.orElseThrow(() -> new UserNotFoundException(false, request.getEmail()));
 		userValidityCheck(user);
+		if (!BCrypt.checkpw(new String(request.getPassword()), user.getPassword())) {
+			throw new UserAndPasswordDoNotMatchException();
+		}
 		user.login();
 		repository.save(user);
 

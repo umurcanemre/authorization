@@ -21,11 +21,12 @@ public class UserResponse {
 	private String validationCode;
 	private boolean sessionLive;
 	private LocalDateTime lastLoginTimestamp;
-	
+
 	public UserResponse(User user) {
 		this.id = user.getId();
 		this.name = user.getName();
 		this.lastName = user.getLastName();
+		this.email = user.getEmail();
 		this.status = user.getStatus();
 		this.joinTimestamp = user.getJoinTimestamp();
 		this.updateTimestamp = user.getUpdateTimestamp();

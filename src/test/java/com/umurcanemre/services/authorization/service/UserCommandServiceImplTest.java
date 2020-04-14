@@ -1,6 +1,6 @@
 package com.umurcanemre.services.authorization.service;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,7 +48,7 @@ public class UserCommandServiceImplTest {
 
 		UserResponse resp = service.createUser(req);
 		assertNotNull(resp);
-		assertNotEquals(req.getPersonalInfo().getEmail(), resp.getEmail());
+		assertEquals(req.getPersonalInfo().getEmail(), resp.getEmail());
 	}
 
 	@Test
